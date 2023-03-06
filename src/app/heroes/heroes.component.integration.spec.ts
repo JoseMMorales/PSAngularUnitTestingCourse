@@ -59,4 +59,20 @@ describe("HeroesComponent (integration tests)", () => {
       expect(heroComponent[i].componentInstance.hero).toEqual(HEROES[i]);
     });
   });
+
+  it("Should call heroService.deleteHero when the Hero Component delete button is clicked", () => {
+    spyOn(fixture.componentInstance, "delete");
+    mockHeroService.getHeroes.and.returnValue(of(HEROES));
+
+    fixture.detectChanges();
+
+    const heroComponents = fixture.debugElement.queryAll(
+      By.directive(HeroComponent)
+    );
+    heroComponents[0]
+      .query(By.css("button"))
+      .triggerEventHandler("click", { stopPropagation: () => {} });
+
+    expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
+  });
 });
